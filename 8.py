@@ -103,4 +103,4 @@ class Tests(unittest.TestCase):
 
     def test_assignment(self):
         self.assertEqual(assignment(4),  5832)
-        print(assignment(13))
+        print(assignment)
