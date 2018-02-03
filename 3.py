@@ -10,11 +10,12 @@ log = logging.getLogger('debug')
 def generate_primes(maximum):
     """Generate list of primes up to maximum"""
     primes = [2]
+    yield 2
     for x in range(3, maximum + 1):
         # the idea here - only things that are divisible by 2, 3 and any other primes are ruled out.  is this right?
         if all([x % prime for prime in primes]):
             primes.append(x)
-    return primes
+            yield x
 
 
 def get_prime_factors(number):
@@ -42,28 +43,50 @@ def prime_check(number):
     # http://planetmath.org/howtofindwhetheragivennumberisprimeornot
     newnum = int(math.ceil(math.sqrt(number)))
     primes = generate_primes(newnum)
-    return all([number % prime != 0 for prime in primes])
+    for prime in primes:
+        if number % prime == 0:
+            return False
+    return True
+
+
+def assignment(number):
+    factors = generate_factors(number)
+    print('factors: {0}'.format(factors))
+    prime_factors = []
+    for x in factors:
+        if prime_check(x):
+            prime_factors.append(x)
+
+    print('prime factors: {0}'.format(prime_factors))
+    
+
+def make_primes():
+    for i in generate_primes(6008514775143):
+        print(i)
 
 
 if __name__ == '__main__':
-    prime_factors = generate_primes(int(math.sqrt(600851475143)))
-    # prime_factors = get_prime_factors(600851475143)
-    print(prime_factors)
-
+    # assignment(13195)
+    assignment(600851475143)
+    # make_primes()
+    # print(generate_factors(6008514775143).sort(key=int))
 
 class Test(unittest.TestCase):
     def test_generate_primes_15(self):
-        primes = generate_primes(15)
+        primes = []
+        for x in generate_primes(30):
+            primes.append(x)
         self.assertIn(2, primes)
         self.assertIn(3, primes)
         self.assertIn(5, primes)
         self.assertIn(7, primes)
         self.assertIn(11, primes)
         self.assertIn(13, primes)
-        self.assertEqual(len(primes), 6)
 
     def test_generate_primes_30(self):
-        primes = generate_primes(30)
+        primes = []
+        for x in generate_primes(30):
+            primes.append(x)
         self.assertNotIn(25, primes)
         self.assertIn(29, primes)
 
